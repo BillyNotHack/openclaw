@@ -351,12 +351,25 @@ export function discoverOpenClawPlugins(params: {
 
   const bundledDir = resolveBundledPluginsDir();
   if (bundledDir) {
-    discoverInDirectory({
-      dir: bundledDir,
-      origin: "bundled",
-      candidates,
-      diagnostics,
-      seen,
+    if (fs.existsSync(bundledDir)) {
+      discoverInDirectory({
+        dir: bundledDir,
+        origin: "bundled",
+        candidates,
+        diagnostics,
+        seen,
+      });
+    } else {
+      diagnostics.push({
+        level: "warn",
+        message: `bundled plugins directory not found: ${bundledDir}`,
+        source: bundledDir,
+      });
+    }
+  } else {
+    diagnostics.push({
+      level: "warn",
+      message: "bundled plugins directory not resolved",
     });
   }
 

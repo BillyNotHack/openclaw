@@ -1,6 +1,6 @@
 FROM node:22-bookworm AS base
 
-# Cache bust: 2026-02-02-v4 - add plugin discovery logging
+# Cache bust: 2026-02-02-v5 - add bundled dir diagnostics
 ARG CACHEBUST=1
 
 # Install Bun (required for build scripts)
