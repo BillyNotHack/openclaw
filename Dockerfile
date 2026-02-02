@@ -31,8 +31,9 @@ COPY scripts ./scripts
 
 RUN pnpm install --frozen-lockfile
 
-# Install Playwright Chromium for WhatsApp Web (cache bust v2)
-RUN npx playwright install chromium && npx playwright install-deps chromium
+# Force cache invalidation for Playwright install
+ARG CACHE_BUST=3
+RUN echo "Cache bust: $CACHE_BUST" && npx playwright install chromium && npx playwright install-deps chromium
 
 COPY . .
 RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
