@@ -1,6 +1,6 @@
 FROM node:22-bookworm AS base
 
-# Cache bust: 2026-02-02-v2 - force fresh build for extensions fix
+# Cache bust: 2026-02-02-v3 - add explicit bundled plugins dir
 ARG CACHEBUST=1
 
 # Install Bun (required for build scripts)
@@ -47,6 +47,8 @@ ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
 ENV NODE_ENV=production
+# Explicitly set bundled plugins directory (auto-discovery may fail in Docker)
+ENV OPENCLAW_BUNDLED_PLUGINS_DIR=/app/extensions
 
 # Allow non-root user to write temp files during runtime/tests.
 RUN chown -R node:node /app
