@@ -1,12 +1,12 @@
 FROM node:22-bookworm AS base
 
-# Install Bun (required for build scripts) - cache bust 2026-02-02-16h45
+# Install Bun (required for build scripts) - cache bust 2026-02-02-19h40
 RUN echo "Build timestamp: $(date)" && curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
 RUN corepack enable
 
-# Install Playwright dependencies for WhatsApp Web support
+# Install system libraries (some plugins may need browser automation)
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
@@ -29,9 +29,12 @@ COPY ui/package.json ./ui/package.json
 COPY patches ./patches
 COPY scripts ./scripts
 
+# Copy extension package.json files (workspace packages must exist before pnpm install)
+COPY extensions/ ./extensions/
+
 RUN pnpm install --frozen-lockfile
 
-# Install Playwright browser for WhatsApp Web
+# Install Playwright browser (optional, for browser automation plugins)
 RUN pnpm exec playwright-core install chromium && pnpm exec playwright-core install-deps chromium
 
 COPY . .
