@@ -1,6 +1,9 @@
 FROM node:22-bookworm AS base
 
-# Install Bun (required for build scripts) - cache bust 2026-02-02-19h40
+# Cache bust: 2026-02-02-v2 - force fresh build for extensions fix
+ARG CACHEBUST=1
+
+# Install Bun (required for build scripts)
 RUN echo "Build timestamp: $(date)" && curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
