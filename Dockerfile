@@ -32,7 +32,7 @@ COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 # Install Playwright browser for WhatsApp Web
-RUN pnpm exec playwright install chromium && pnpm exec playwright install-deps chromium
+RUN pnpm exec playwright-core install chromium && pnpm exec playwright-core install-deps chromium
 
 COPY . .
 RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
