@@ -1,5 +1,6 @@
-FROM node:22-bookworm
+FROM node:22-bookworm AS base
 
+# Cache bust timestamp: 2026-02-02-v1
 # Install Bun (required for build scripts)
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
