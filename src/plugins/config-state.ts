@@ -13,7 +13,29 @@ export type NormalizedPluginsConfig = {
   entries: Record<string, { enabled?: boolean; config?: unknown }>;
 };
 
-export const BUNDLED_ENABLED_BY_DEFAULT = new Set<string>();
+// Channel plugins that are enabled by default when bundled
+// These provide core messaging channel functionality
+export const BUNDLED_ENABLED_BY_DEFAULT = new Set<string>([
+  "whatsapp",
+  "telegram",
+  "discord",
+  "signal",
+  "slack",
+  "imessage",
+  "matrix",
+  "msteams",
+  "googlechat",
+  "bluebubbles",
+  "line",
+  "mattermost",
+  "nextcloud-talk",
+  "nostr",
+  "tlon",
+  "twitch",
+  "zalo",
+  "zalouser",
+  "voice-call",
+]);
 
 const normalizeList = (value: unknown): string[] => {
   if (!Array.isArray(value)) {

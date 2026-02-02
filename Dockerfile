@@ -1,6 +1,6 @@
 FROM node:22-bookworm AS base
 
-# Cache bust: 2026-02-02-v7 - add plugin details to debug
+# Cache bust: 2026-02-02-v8 - enable channel plugins by default
 ARG CACHEBUST=1
 
 # Install Bun (required for build scripts)
