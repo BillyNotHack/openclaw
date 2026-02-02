@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile.railway"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "node dist/index.js gateway --allow-unconfigured --port 8080 --bind lan --token $OPENCLAW_GATEWAY_TOKEN"
