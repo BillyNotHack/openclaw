@@ -1,6 +1,6 @@
 FROM node:22-bookworm AS base
 
-# Cache bust: 2026-02-02-v8 - enable channel plugins by default
+# Cache bust: 2026-02-02-v9 - fix UI unsupported schema propagation
 ARG CACHEBUST=1
 
 # Install Bun (required for build scripts)

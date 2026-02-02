@@ -86,8 +86,10 @@ function normalizeSchemaNode(
       if (!isAnySchema(schema.additionalProperties)) {
         const res = normalizeSchemaNode(schema.additionalProperties, [...path, "*"]);
         normalized.additionalProperties = res.schema ?? schema.additionalProperties;
-        if (res.unsupportedPaths.length > 0) {
-          unsupported.add(pathLabel);
+        // Don't cascade unsupported status - just track the nested unsupported paths
+        // This allows rendering the parent while showing "Raw mode" for specific fields
+        for (const entry of res.unsupportedPaths) {
+          unsupported.add(entry);
         }
       }
     }
@@ -98,8 +100,9 @@ function normalizeSchemaNode(
     } else {
       const res = normalizeSchemaNode(itemsSchema, [...path, "*"]);
       normalized.items = res.schema ?? itemsSchema;
-      if (res.unsupportedPaths.length > 0) {
-        unsupported.add(pathLabel);
+      // Don't cascade unsupported status - just track the nested unsupported paths
+      for (const entry of res.unsupportedPaths) {
+        unsupported.add(entry);
       }
     }
   } else if (
