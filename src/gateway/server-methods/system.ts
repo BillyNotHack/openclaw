@@ -1,9 +1,12 @@
+import fs from "node:fs";
 import type { GatewayRequestHandlers } from "./types.js";
 import { resolveMainSessionKeyFromConfig } from "../../config/sessions.js";
 import { getLastHeartbeatEvent } from "../../infra/heartbeat-events.js";
 import { setHeartbeatsEnabled } from "../../infra/heartbeat-runner.js";
 import { enqueueSystemEvent, isSystemEventContextChanged } from "../../infra/system-events.js";
 import { listSystemPresence, updateSystemPresence } from "../../infra/system-presence.js";
+import { resolveBundledPluginsDir } from "../../plugins/bundled-dir.js";
+import { requireActivePluginRegistry } from "../../plugins/runtime.js";
 import { ErrorCodes, errorShape } from "../protocol/index.js";
 
 export const systemHandlers: GatewayRequestHandlers = {
@@ -136,5 +139,40 @@ export const systemHandlers: GatewayRequestHandlers = {
       },
     );
     respond(true, { ok: true }, undefined);
+  },
+  "debug.plugins": ({ respond }) => {
+    const bundledDir = resolveBundledPluginsDir();
+    const envOverride = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR?.trim();
+    let bundledDirExists = false;
+    let bundledDirContents: string[] = [];
+    if (bundledDir) {
+      bundledDirExists = fs.existsSync(bundledDir);
+      if (bundledDirExists) {
+        try {
+          bundledDirContents = fs.readdirSync(bundledDir);
+        } catch {
+          bundledDirContents = ["<error reading directory>"];
+        }
+      }
+    }
+    let registry;
+    try {
+      registry = requireActivePluginRegistry();
+    } catch {
+      registry = null;
+    }
+    respond(
+      true,
+      {
+        bundledDir,
+        envOverride,
+        bundledDirExists,
+        bundledDirContents,
+        registryPluginCount: registry?.plugins?.length ?? 0,
+        registryChannelCount: registry?.channels?.length ?? 0,
+        registryDiagnostics: registry?.diagnostics ?? [],
+      },
+      undefined,
+    );
   },
 };
