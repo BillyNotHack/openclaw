@@ -161,6 +161,14 @@ export const systemHandlers: GatewayRequestHandlers = {
     } catch {
       registry = null;
     }
+    // Get plugin details
+    const pluginDetails = (registry?.plugins ?? []).map((p) => ({
+      id: p.id,
+      status: p.status,
+      enabled: p.enabled,
+      channelIds: p.channelIds,
+      error: p.error,
+    }));
     respond(
       true,
       {
@@ -171,6 +179,7 @@ export const systemHandlers: GatewayRequestHandlers = {
         registryPluginCount: registry?.plugins?.length ?? 0,
         registryChannelCount: registry?.channels?.length ?? 0,
         registryDiagnostics: registry?.diagnostics ?? [],
+        pluginDetails,
       },
       undefined,
     );

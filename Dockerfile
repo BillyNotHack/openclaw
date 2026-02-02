@@ -1,6 +1,6 @@
 FROM node:22-bookworm AS base
 
-# Cache bust: 2026-02-02-v6 - add debug.plugins endpoint
+# Cache bust: 2026-02-02-v7 - add plugin details to debug
 ARG CACHEBUST=1
 
 # Install Bun (required for build scripts)
